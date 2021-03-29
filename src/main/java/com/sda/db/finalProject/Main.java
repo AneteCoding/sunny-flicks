@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws SQLException {
 
+
         Connection connection = DBConnection.getConnection();
         if (connection == null) {
             System.out.println("We ain't able to connect to the database");
