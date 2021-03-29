@@ -26,6 +26,7 @@ public class DBOps {
         }
     }
 
+
     public static void insertIntoTable(Connection connection, String title, String year, double rating) throws SQLException {
         String sql = "INSERT INTO sunnyFlicks (title,year,ratings) VALUES(?,?,?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
