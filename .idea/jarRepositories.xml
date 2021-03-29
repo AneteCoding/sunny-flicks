@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteRepositoriesConfiguration">
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="central" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="salient" />
+      <option name="name" value="salient" />
+      <option name="url" value="s3://salient-repo/maven/release" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="bintray-vgs" />
+      <option name="name" value="bintray-vgs" />
+      <option name="url" value="https://dl.bintray.com/vg/vgs-oss" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="dynamodb-local-oregon" />
+      <option name="name" value="dynamodb-local-oregon" />
+      <option name="url" value="https://s3-us-west-2.amazonaws.com/dynamodb-local/release" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Maven Central repository" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="gitlab-maven" />
+      <option name="name" value="gitlab-maven" />
+      <option name="url" value="https://gitlab.com/api/v4/projects/21418369/packages/maven" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="iddera-maven" />
+      <option name="name" value="iddera-maven" />
+      <option name="url" value="https://gitlab.com/api/v4/projects/24607722/packages/maven" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="stage-dev" />
+      <option name="name" value="stage-dev" />
+      <option name="url" value="s3://stage-tech-repo/maven/release" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="cdversion" />
+      <option name="name" value="cdversion" />
+      <option name="url" value="https://github.com/beaverworks/cdversion-maven-extension/raw/repository" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="primus-maven" />
+      <option name="name" value="primus-maven" />
+      <option name="url" value="https://gitlab.com/api/v4/projects/22798453/packages/maven" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="cube-dev" />
+      <option name="name" value="cube-dev" />
+      <option name="url" value="s3://cube-repo/maven/release" />
+    </remote-repository>
+  </component>
+</project>
