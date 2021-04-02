@@ -1,4 +1,4 @@
-package com.sda.db;
+package com.sda.db.practiceDB;
 
 import java.sql.*;
 

@@ -150,6 +150,7 @@ public class DBOps {
         String sql = "SELECT * from sunnyFlicks ORDER BY  ratings DESC";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
+            System.out.println("Top of the Sunny Flicks!");
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String title = resultSet.getString("title");
@@ -177,6 +178,35 @@ public class DBOps {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setDouble(1, maxRating);
             ResultSet resultSet = statement.executeQuery();
+            System.out.println("List of the max rated movies!");
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String year = resultSet.getString("year");
+                double rating = resultSet.getInt("ratings");
+                System.out.println(id + " | " + title + " | " + year + " | " + rating);
+            }
+        }
+    }
+    public static double getMinRating(Connection connection) throws SQLException {
+        double minRating = 0.0;
+        String sql = "SELECT MIN(ratings) AS  lowestRating from sunnyFlicks ";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                minRating = resultSet.getInt("lowestRating");
+            }
+        }
+        return minRating;
+    }
+
+    public static void printMoviesWithMinRating(Connection connection) throws SQLException {
+        double minRating = getMinRating(connection);
+        String sql = "SELECT * from sunnyFlicks WHERE ratings=?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDouble(1, minRating);
+            ResultSet resultSet = statement.executeQuery();
+            System.out.println("List of the lowest rated movies!");
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String title = resultSet.getString("title");
@@ -187,31 +217,28 @@ public class DBOps {
         }
     }
 
-    public static int ratingCount(Connection connection) throws SQLException {
-        String sql = "SELECT movieId, COUNT(*) FROM userRatings GROUP BY movieId";
-        int count = 0;
+    public static void ratingCount(Connection connection) throws SQLException {
+        String sql = "SELECT COUNT(*) voteCount, b.id, b.title, b.ratings, b.year FROM userRatings a " +
+                "INNER JOIN sunnyFlicks b ON a.movieId = b.id GROUP BY b.id, b.title ORDER BY id";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
+            System.out.println("List of the movies with full information.");
             while (resultSet.next()) {
-                count = resultSet.getInt("COUNT");
+                int id = resultSet.getInt("id");
+                int voteCount = resultSet.getInt("voteCount");
+                String title = resultSet.getString("title");
+                String year = resultSet.getString("year");
+                int ratings = resultSet.getInt("ratings");
+
+                if (voteCount == 1) {
+                    System.out.println(id + " | " + title + " | " + year + " | " + "rating: " + ratings + " | " + voteCount + " vote");
+                } else {
+                    System.out.println(id + " | " + title + " | " + year + " | " + "rating: " + ratings + " | " + voteCount + " votes");
+                }
             }
         }
-        return count;
-
     }
-
-//    public static void printRatingCount(Connection connection) throws SQLException {
-//        int count = ratingCount(connection);
-//        String sql = "SELECT * from userRatings ADD COUNT";
-//        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-//            ResultSet resultSet = statement.executeQuery();
-//            while (resultSet.next()) {
-//                int movieId = resultSet.getInt("movieId");
-//                count = resultSet.getInt("COUNT");
-//                System.out.println(movieId + " | " + count);
-//            }
-//        }
-//    }
 }
+
 
 

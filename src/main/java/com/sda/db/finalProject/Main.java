@@ -29,6 +29,7 @@ public class Main {
             DBOps.printAllDatabaseRecordNoRating(connection);
             DBOps.createRatingTable(connection);
 
+            System.out.println("____________________________________________________________");
             System.out.println("Please use our app to rate for yourself!");
             int command = 1;
             do {
@@ -37,7 +38,6 @@ public class Main {
                 System.out.println("Now please rate the movie from 1-10: ");
                 double userRating = scanner.nextDouble();
                 DBOps.insertIntoRatingTable(connection, movieId, userRating);
-                //DBOps.printRatingDatabaseRecord(connection);
                 double avgRating = DBOps.getAverageRating(connection, movieId);
                 DBOps.updateRecord(connection, avgRating, movieId);
                 System.out.println("____________________________________________________________");
@@ -45,15 +45,15 @@ public class Main {
                 command = scanner.nextInt();
             } while ( command == 1);
             System.out.println("Thank you for taking part in 'Sunny Flicks' movie ratings!");
-//            DBOps.printAllDatabaseRecord(connection);
             System.out.println("____________________________________________________________");
-            System.out.println("Top of the Sunny Flicks!");
             DBOps.printRatingDatabaseRecordDescending(connection);
             System.out.println("____________________________________________________________");
-            System.out.println("List of the max rated movies!");
             DBOps.printMoviesWithMaxRating(connection);
+            System.out.println("____________________________________________________________");
+            DBOps.printMoviesWithMinRating(connection);
+            System.out.println("____________________________________________________________");
             DBOps.ratingCount(connection);
-//            DBOps.printRatingCount(connection);
+            System.out.println("____________________________________________________________");
 
         }
     }
