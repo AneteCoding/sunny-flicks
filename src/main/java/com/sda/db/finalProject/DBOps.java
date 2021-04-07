@@ -134,10 +134,10 @@ public class DBOps {
      */
     public static void printMoviesWithMatchingTitle(Connection connection, String searchString) throws SQLException {
 
-        String sql = "SELECT * from sunnyFlicks WHERE title LIKE '%?%'";
+        String sql = "SELECT * from sunnyFlicks WHERE title LIKE ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, "%"+searchString+"%");
             try (ResultSet resultSet = statement.executeQuery()) {
-                statement.setString(1, searchString);
                 System.out.println("This is the matching movies with entered title");
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
@@ -150,72 +150,72 @@ public class DBOps {
         }
     }
 
-        public static double getMinRating (Connection connection) throws SQLException {
-            double minRating = 0.0;
-            String sql = "SELECT MIN(ratings) AS  lowestRating from sunnyFlicks ";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-                    minRating = resultSet.getDouble("lowestRating");
-                }
+    public static double getMinRating(Connection connection) throws SQLException {
+        double minRating = 0.0;
+        String sql = "SELECT MIN(ratings) AS  lowestRating from sunnyFlicks ";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                minRating = resultSet.getDouble("lowestRating");
             }
-            return minRating;
         }
+        return minRating;
+    }
 
-        public static void printMoviesWithMinRating (Connection connection) throws SQLException {
-            double minRating = getMinRating(connection);
-            String sql = "SELECT * from sunnyFlicks WHERE ratings=?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setDouble(1, minRating);
-                ResultSet resultSet = statement.executeQuery();
-                System.out.println("This is the lowest rated movie:");
+    public static void printMoviesWithMinRating(Connection connection) throws SQLException {
+        double minRating = getMinRating(connection);
+        String sql = "SELECT * from sunnyFlicks WHERE ratings=?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDouble(1, minRating);
+            ResultSet resultSet = statement.executeQuery();
+            System.out.println("This is the lowest rated movie:");
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String title = resultSet.getString("title");
+                String year = resultSet.getString("year");
+                double rating = resultSet.getDouble("ratings");
+                System.out.printf("%s | %s | %.1f\n", title, year, rating);
+            }
+        }
+    }
+
+
+    public static void countTotalVotes(Connection connection) throws SQLException {
+        String sql = "SELECT COUNT(movieId) AS voteCount FROM userRatings";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int totalVotes = resultSet.getInt("voteCount");
+                System.out.printf("\nTotal votes received in 'Sunny Flicks' movie ratings so far: %d.\n", totalVotes);
+            }
+        }
+    }
+
+    public static void ratingCount(Connection connection) throws SQLException {
+        String sql = "SELECT COUNT(movieId) voteCount, sunnyFlicks.id, sunnyFlicks.title, sunnyFlicks.year, sunnyFlicks.ratings " +
+                "FROM userRatings RIGHT JOIN sunnyFlicks ON userRatings.movieId=sunnyFlicks.id GROUP BY movieId " +
+                "ORDER BY sunnyFlicks.ratings DESC, sunnyFlicks.title";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = statement.executeQuery(sql)) {
+                System.out.println("***** Final results *****");
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
+                    int voteCount = resultSet.getInt("voteCount");
                     String title = resultSet.getString("title");
                     String year = resultSet.getString("year");
-                    double rating = resultSet.getDouble("ratings");
-                    System.out.printf("%s | %s | %.1f\n", title, year, rating);
-                }
-            }
-        }
+                    double ratings = resultSet.getDouble("ratings");
 
+                    if (voteCount == 1) {
+                        System.out.printf("%s | %s | %.1f | %d vote\n", title, year, ratings, voteCount);
 
-        public static void countTotalVotes (Connection connection) throws SQLException {
-            String sql = "SELECT COUNT(movieId) AS voteCount FROM userRatings";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-                    int totalVotes = resultSet.getInt("voteCount");
-                    System.out.printf("\nTotal votes received in 'Sunny Flicks' movie ratings so far: %d.\n", totalVotes);
-                }
-            }
-        }
+                    } else {
+                        System.out.printf("%s | %s | %.1f | %d votes\n", title, year, ratings, voteCount);
 
-        public static void ratingCount (Connection connection) throws SQLException {
-            String sql = "SELECT COUNT(movieId) voteCount, sunnyFlicks.id, sunnyFlicks.title, sunnyFlicks.year, sunnyFlicks.ratings " +
-                    "FROM userRatings RIGHT JOIN sunnyFlicks ON userRatings.movieId=sunnyFlicks.id GROUP BY movieId " +
-                    "ORDER BY sunnyFlicks.ratings DESC, sunnyFlicks.title";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                try (ResultSet resultSet = statement.executeQuery(sql)) {
-                    System.out.println("***** Final results *****");
-                    while (resultSet.next()) {
-                        int id = resultSet.getInt("id");
-                        int voteCount = resultSet.getInt("voteCount");
-                        String title = resultSet.getString("title");
-                        String year = resultSet.getString("year");
-                        double ratings = resultSet.getDouble("ratings");
-
-                        if (voteCount == 1) {
-                            System.out.printf("%s | %s | %.1f | %d vote\n", title, year, ratings, voteCount);
-
-                        } else {
-                            System.out.printf("%s | %s | %.1f | %d votes\n", title, year, ratings, voteCount);
-
-                        }
                     }
                 }
             }
         }
+    }
 
 
 //    public static void printAllDatabaseRecord(Connection connection) throws SQLException {
@@ -231,7 +231,7 @@ public class DBOps {
 //            }
 //        }
 //    }
-        //    public static void deleteRecord(Connection connection, int id) throws SQLException {
+    //    public static void deleteRecord(Connection connection, int id) throws SQLException {
 //        String sql = "DELETE from sunnyFlicks where id=?";
 //        try (PreparedStatement statement = connection.prepareStatement(sql)) {
 //            statement.setInt(1, id);
@@ -242,7 +242,7 @@ public class DBOps {
 //            }
 //        }
 //    }
-        //    public static void deleteTable(Connection connection, String tableName) throws SQLException {
+    //    public static void deleteTable(Connection connection, String tableName) throws SQLException {
 //        String sql = "DROP TABLE IF EXISTS " + tableName;
 //        try (Statement statement = connection.createStatement()) {
 //            statement.execute(sql);
@@ -262,4 +262,4 @@ public class DBOps {
 //            }
 //        }
 //    }
-    }
+}
