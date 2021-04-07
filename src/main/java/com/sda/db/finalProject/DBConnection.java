@@ -11,6 +11,7 @@ public class DBConnection {
     }
 
     public static Statement createStatement() throws SQLException {
+
         Connection connection = getConnection();
         return connection.createStatement();
     }
