@@ -1,8 +1,5 @@
 package com.sda.db.finalProject;
 
-import org.w3c.dom.ls.LSOutput;
-
-import java.security.PublicKey;
 import java.sql.*;
 
 public class DBOps {
@@ -59,11 +56,11 @@ public class DBOps {
         String sql = "SELECT * from sunnyFlicks";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
+            System.out.println("Here you will find the 15 best ever sunny holiday movies as recommended by 'Sunny Flicks'.\n");
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String title = resultSet.getString("title");
                 String year = resultSet.getString("year");
-                double rating = resultSet.getInt("ratings");
                 System.out.println(id + " | " + title + " | " + year);
             }
         }
@@ -119,7 +116,6 @@ public class DBOps {
             try (ResultSet resultSet = statement.executeQuery()) {
                 System.out.println("This is the highest rated movie:");
                 while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
                     String title = resultSet.getString("title");
                     String year = resultSet.getString("year");
                     double rating = resultSet.getDouble("ratings");
@@ -129,23 +125,23 @@ public class DBOps {
         }
     }
 
-    /**
-     * something like this
-     */
+
     public static void printMoviesWithMatchingTitle(Connection connection, String searchString) throws SQLException {
 
         String sql = "SELECT * from sunnyFlicks WHERE title LIKE ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, "%"+searchString+"%");
-            try (ResultSet resultSet = statement.executeQuery()) {
-                System.out.println("This is the matching movies with entered title");
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
+            statement.setString(1, "%" + searchString + "%");
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next() == false) {
+                System.out.println("Sorry, we could not find any movie with this title.\nTry again.");
+            } else {
+                System.out.println("This is the matching movie with entered title:");
+                do {
                     String title = resultSet.getString("title");
                     String year = resultSet.getString("year");
                     double rating = resultSet.getDouble("ratings");
-                    System.out.printf("%s | %s | %.1f\n", title, year, rating);
-                }
+                    System.out.printf("%s | %s | rating: %.1f\n", title, year, rating);
+                } while (resultSet.next());
             }
         }
     }
@@ -170,7 +166,6 @@ public class DBOps {
             ResultSet resultSet = statement.executeQuery();
             System.out.println("This is the lowest rated movie:");
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
                 String title = resultSet.getString("title");
                 String year = resultSet.getString("year");
                 double rating = resultSet.getDouble("ratings");
@@ -187,6 +182,7 @@ public class DBOps {
             while (resultSet.next()) {
                 int totalVotes = resultSet.getInt("voteCount");
                 System.out.printf("\nTotal votes received in 'Sunny Flicks' movie ratings so far: %d.\n", totalVotes);
+                System.out.println("******************************************************************");
             }
         }
     }
@@ -197,9 +193,8 @@ public class DBOps {
                 "ORDER BY sunnyFlicks.ratings DESC, sunnyFlicks.title";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             try (ResultSet resultSet = statement.executeQuery(sql)) {
-                System.out.println("***** Final results *****");
+                System.out.println("************** Final results **************");
                 while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
                     int voteCount = resultSet.getInt("voteCount");
                     String title = resultSet.getString("title");
                     String year = resultSet.getString("year");
