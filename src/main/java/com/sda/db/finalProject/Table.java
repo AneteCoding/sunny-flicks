@@ -7,12 +7,12 @@ import static com.sda.db.finalProject.DBConnection.getConnection;
 
 public class Table {
 
-    public static void createTable() throws Exception {
+    public static void createMovieTable() throws Exception {
 
         Connection connection = getConnection();
         Scanner scanner = new Scanner(System.in);
 
-        DBOps.createTable(connection);
+        DBOpsUtilities.createTable(connection);
         System.out.println("Enter movie title:");
         String title = scanner.nextLine();
         System.out.println("Enter release year: ");

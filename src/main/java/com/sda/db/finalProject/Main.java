@@ -14,8 +14,8 @@ public class Main {
         } else {
             System.out.println("Welcome to 'Sunny Flicks' movie ratings!");
 
-//            Table.createTable();
-//            DBOps.createRatingTable(connection);
+//            Table.createMovieTable();
+//            DBOpsUtilities.createRatingTable(connection);
 
             DBOps.printAllDatabaseRecordNoRating(connection);
             Start.startApp();

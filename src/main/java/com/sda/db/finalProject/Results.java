@@ -9,7 +9,6 @@ import static com.sda.db.finalProject.DBConnection.getConnection;
 public class Results {
 
     public static void printMenu() {
-
         System.out.println("\nWould you like to see the summary of the results?");
         System.out.println("Your choices are:\n1- to see the best rated movie\n2- to see the lowest rated movie\n" +
                 "3- to see the full list of results so far\n4- search movie by name\n0- to Exit our app.");
@@ -42,6 +41,9 @@ public class Results {
                 case 0:
                     quit = true;
                     System.out.println("Thank you for using our app!");
+                    break;
+                default:
+                    System.out.println("Choice not found.");
             }
         }
     }
